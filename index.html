@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Love</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* --- Global Styles --- */
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: #fff0f5;
+            background-image: linear-gradient(180deg, #fff0f5 0%, #ffe6e9 100%);
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- Floating Background Emojis --- */
+        .floating-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .emoji {
+            position: absolute;
+            bottom: -50px;
+            font-size: 2rem;
+            animation: floatUp linear forwards;
+            opacity: 0.6;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-110vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* --- Page 1: The Landing --- */
+        #page1 {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            transition: opacity 0.8s ease-out;
+        }
+
+        .hero-text {
+            font-family: 'Playfair Display', serif;
+            color: #8B0000;
+            font-size: 4rem;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .sub-text {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: #b03060;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 40px;
+            position: relative;
+        }
+
+        .btn {
+            padding: 15px 50px;
+            font-size: 1.5rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .btn-yes {
+            background-color: #DC143C;
+            color: white;
+            box-shadow: 0 4px 15px rgba(220, 20, 60, 0.4);
+        }
+
+        .btn-yes:hover {
+            transform: scale(1.1);
+            background-color: #C71585;
+        }
+
+        .btn-no {
+            background-color: #E6E6FA;
+            color: #555;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- Page 2: The Letter --- */
+        #page2 {
+            display: none;
+            padding: 50px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-title {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            color: #8B0000;
+            font-size: 4rem;
+            margin-bottom: 60px;
+        }
+
+        .content-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 40px;
+            align-items: stretch;
+        }
+
+        .content-row:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .card {
+            background: rgba(255, 240, 245, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            flex: 1;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            display: flex;
+            align-items: center;
+        }
+
+        .text-card p {
+            color: #8B0000;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin: 0;
+        }
+
+        .image-card {
+            background: #fff;
+            justify-content: center;
+            min-height: 300px;
+        }
+
+        .image-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+
+        .placeholder-text {
+            color: #aaa;
+            font-style: italic;
+        }
+
+        /* Final Proposal Section */
+        .final-proposal-container {
+            text-align: center;
+            margin-top: 100px;
+            margin-bottom: 150px;
+            padding: 40px;
+        }
+
+        #cryMessage {
+            position: fixed;
+            display: none;
+            color: #8B0000;
+            font-weight: bold;
+            font-style: italic;
+            background: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero-text {
+                font-size: 2.5rem;
+            }
+
+            .sub-text {
+                font-size: 1.8rem;
+            }
+
+            .content-row {
+                flex-direction: column !important;
+            }
+
+            .header-title {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="floating-container" id="emoji-container"></div>
+    <div id="cryMessage">Don't leave me! 🥺</div>
+
+    <div id="page1">
+        <h1 class="hero-text">Happy Valentine's<br>Day<br>My Heart</h1>
+        <h2 class="sub-text">Will you be my love of my life?</h2>
+
+        <div class="btn-container">
+            <button class="btn btn-yes" onclick="goToPage2()">Yes</button>
+            <button class="btn btn-no" id="noBtn" onmouseover="moveButton(this)">No</button>
+        </div>
+    </div>
+
+    <div id="page2">
+        <h1 class="header-title">My Dearest Love</h1>
+
+        <div class="content-row">
+            <div class="card text-card">
+                <p>From the very moment our paths first crossed, my world underwent a transformation so profound that I
+                    could never have imagined it possible.
+                    You didn't just enter my life; you became the very sun that illuminates my darkest hours, chasing
+                    away every shadow with your presence. Every day spent with you feels like a new discovery, a
+                    beautiful unfolding of a story I never want to end. You have filled the quiet, empty spaces of my
+                    heart with a persistent, radiant warmth that remains even when we are apart.
+                    I find myself constantly looking back and marveling at how much more vibrant everything has become
+                    since you arrived.</p>
+            </div>
+            <div class="card image-card">
+                <span class="placeholder-text" id="img1-text">[Photo 1]</span>
+                <img src="7.jpeg" alt="" style="display:none;"
+                    onload="this.style.display='block'; document.getElementById('img1-text').style.display='none';">
+            </div>
+        </div>
+
+        <div class="content-row">
+            <div class="card text-card">
+                <p>ou are so much more than a partner to me; you are my best friend, my most trusted confidant, and the
+                    one soul who truly knows my heart.
+                    Your kindness is a gentle force that softens the world around us, and your inner strength is the
+                    anchor that keeps me steady during life’s storms. I am continually moved by the way you carry
+                    yourself, with a grace and a beautiful spirit that inspires me to grow. Seeing the world through
+                    your eyes has taught me more about compassion and courage than anything else ever could.
+                    You make me want to be a better person, not just for you, but for the life we are building together.
+                </p>
+            </div>
+            <div class="card image-card">
+                <span class="placeholder-text" id="img2-text">[Photo 2]</span>
+                <img src="2.jpeg" alt="" style="display:none;"
+                    onload="this.style.display='block'; document.getElementById('img2-text').style.display='none';">
+            </div>
+        </div>
+
+        <div class="content-row">
+            <div class="card text-card">
+                <p>As we look toward the future, I promise to cherish every version of you that the passing years may
+                    reveal, holding your heart as my most precious treasure.
+                    I vow to be the loudest voice of support for your wildest dreams, standing firmly behind you as you
+                    reach for everything you deserve. You will never have to walk a single step of this journey alone.
+                </p>
+            </div>
+            <div class="card image-card">
+                <span class="placeholder-text" id="img3-text">[Photo 3]</span>
+                <img src="5.jpeg" alt="" style="display:none;"
+                    onload="this.style.display='block'; document.getElementById('img3-text').style.display='none';">
+            </div>
+        </div>
+
+        <div class="content-row">
+            <div class="card text-card">
+                <p> When I think about the life ahead of us, I am filled with an overwhelming sense of peace because I
+                    know that you are by my side.
+                    You are the joy in my today, the comfort in my tonight, and the beautiful promise of all my
+                    tomorrows combined into one. There is no version of my future that does not have your smile lighting
+                    the way and your laughter providing the soundtrack to our days.
+                    I choose you now, and I will continue to choose you with every breath I take, for as long as I live.
+                    You are my home, my heart, and my entire world, forever and always.
+                </p>
+            </div>
+            <div class="card image-card">
+                <span class="placeholder-text" id="img4-text">[Photo 4]</span>
+                <img src="4.jpeg" alt="" style="display:none;"
+                    onload="this.style.display='block'; document.getElementById('img4-text').style.display='none';">
+            </div>
+        </div>
+
+        <div class="final-proposal-container">
+            <h1 class="hero-text" style="font-size: 3.5rem;">Will You Marry Me? 💍</h1>
+            <div class="btn-container" style="justify-content: center; margin-top: 40px;">
+                <button class="btn btn-yes" onclick="celebrate()">Yes!</button>
+                <button class="btn btn-no" id="finalNoBtn" onmouseover="moveButton(this, true)">No</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Floating Emojis
+        const emojiContainer = document.getElementById('emoji-container');
+        const emojis = ['❤️', '💖', '💕', '🥰', '🌹', '✨'];
+
+        setInterval(() => {
+            const el = document.createElement('div');
+            el.classList.add('emoji');
+            el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            el.style.left = Math.random() * 100 + 'vw';
+            el.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            emojiContainer.appendChild(el);
+            setTimeout(() => el.remove(), 7000);
+        }, 300);
+
+        // 2. Escape Button Logic
+        function moveButton(btn, showMessage = false) {
+            const padding = 20;
+            const maxX = window.innerWidth - btn.offsetWidth - padding;
+            const maxY = window.innerHeight - btn.offsetHeight - padding;
+
+            const randomX = Math.max(padding, Math.random() * maxX);
+            const randomY = Math.max(padding, Math.random() * maxY);
+
+            btn.style.position = 'fixed';
+            btn.style.left = randomX + 'px';
+            btn.style.top = randomY + 'px';
+            btn.style.zIndex = "1001";
+
+            if (showMessage) {
+                const cryMsg = document.getElementById('cryMessage');
+                cryMsg.style.display = 'block';
+                cryMsg.style.left = randomX + 'px';
+                cryMsg.style.top = (randomY - 50) + 'px';
+            }
+        }
+
+        // 3. Page Transition
+        function goToPage2() {
+            const p1 = document.getElementById('page1');
+            const p2 = document.getElementById('page2');
+            p1.style.opacity = '0';
+            setTimeout(() => {
+                p1.style.display = 'none';
+                p2.style.display = 'block';
+                window.scrollTo(0, 0);
+            }, 800);
+        }
+
+        // 4. Celebration
+        function celebrate() {
+            document.getElementById('cryMessage').style.display = 'none';
+            const duration = 10 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 2000 };
+
+            const interval = setInterval(function () {
+                const timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
+
+                const particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: Math.random(), y: Math.random() - 0.2 } }));
+            }, 250);
+
+            confetti({
+                particleCount: 150,
+                spread: 100,
+                origin: { y: 0.6 },
+                shapes: ['heart'],
+                colors: ['#FFC0CB', '#FF69B4', '#FF1493']
+            });
+        }
+    </script>
+</body>
+
+</html>
